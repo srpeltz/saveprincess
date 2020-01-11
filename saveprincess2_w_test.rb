@@ -1,4 +1,6 @@
 #!/bin/ruby
+require "minitest/autorun"
+
 def nextMove(n,r,c,grid)
   princessCoordinates = Hash.new
   botCoordinates = {x: c, y: r}
@@ -35,6 +37,7 @@ def nextMove(n,r,c,grid)
   end #if coordinate hashes not empty?
 
   print move
+  return move
 end
 
 n = gets.to_i
@@ -48,3 +51,24 @@ grid = Array.new(n)
 end
 
 nextMove(n,r,c,grid)
+
+
+# TESTS
+class TestPath < Minitest::Test
+  @@test_grid = ['------', '-p----', '------']
+  def test_next_move_up
+    assert_equal  "UP", nextMove(n = 5, 2, 3, @@test_grid)
+  end
+
+  def test_next_move_left
+    assert_equal  "LEFT", nextMove(n = 5, 1, 4, @@test_grid)
+  end
+
+  def test_next_move_right
+    assert_equal  "RIGHT", nextMove(n = 5, 1, 0, @@test_grid)
+  end
+
+  def test_next_move_down
+    assert_equal  "DOWN", nextMove(n = 5, 0, 1, @@test_grid)
+  end
+end
