@@ -1,4 +1,6 @@
 #!/bin/ruby
+require "minitest/autorun"
+
 def displayPathtoPrincess(n,grid)
     princessCoordinates = Hash.new
     botCoordinates = Hash.new
@@ -9,13 +11,16 @@ def displayPathtoPrincess(n,grid)
         foundM = el.split(//).find_index("m")
 
         if foundP #found princess
-            princessCoordinates[:x] = el.split(//).find_index("p")
-            princessCoordinates[:y] = i
+          princessCoordinates = {
+            x: el.split(//).find_index("p"),
+            y: i
+          }
         elsif foundM #found bot
-            botCoordinates[:x] = el.split(//).find_index("m")
-            botCoordinates[:y] = i
+          botCoordinates = {
+            x: el.split(//).find_index("m"),
+            y: i
+          }
         end
-
     end #grid.each_with_index
 
     if !princessCoordinates.empty? && !botCoordinates.empty? #if empty then no 'm' or 'p' found in grid, therefore no moves
@@ -36,9 +41,11 @@ def displayPathtoPrincess(n,grid)
 
         end #while princessCoordinates != botCoordinates
 
+    else
+      return "no princess and/or bot found..."
     end #if coordinate hashes not empty?
 
-    print moves
+    return moves
 end #displayPathtoPrincess
 
 
@@ -51,3 +58,27 @@ grid = Array.new(m)
 end
 
 displayPathtoPrincess(m,grid)
+
+
+#TESTS
+class TestPath < Minitest::Test
+  def test_path_up_left
+    @test_grid = ['p--', '---', '--m']
+    assert_equal  "UP\nLEFT\nUP\nLEFT\n", displayPathtoPrincess(m = 3, @test_grid)
+  end
+
+  def test_path_up_right
+    @test_grid = ['--p', '---', 'm--']
+    assert_equal  "UP\nRIGHT\nUP\nRIGHT\n", displayPathtoPrincess(m = 3, @test_grid)
+  end
+
+  def test_path_down_right
+    @test_grid = ['m--', '---', '--p']
+    assert_equal  "DOWN\nRIGHT\nDOWN\nRIGHT\n", displayPathtoPrincess(m = 3, @test_grid)
+  end
+
+  def test_path_down_left
+    @test_grid = ['--m', '---', 'p--']
+    assert_equal  "DOWN\nLEFT\nDOWN\nLEFT\n", displayPathtoPrincess(m = 3, @test_grid)
+  end
+end
